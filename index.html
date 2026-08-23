@@ -1,1016 +1,489 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aung Ko Ko Oo | CS & AI Researcher</title>
+<title>Aung Ko Ko Oo — Computer Scientist & AI Researcher</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
-  :root {
-    /* ── LIGHT THEME VARIABLES ── */
-    --bg: #f4f6f9;
-    --surface: #ffffff;
-    --surface2: #e9ecef;
-    --border: #dee2e6;
-    --accent: #3b82f6;
-    --accent2: #0ea5e9;
-    --text: #111827;
-    --muted: #374151;
-    --dim: #6b7280;
-    --tag-bg: #f1f3f5;
-    --hero-overlay: rgba(255, 255, 255, 0);
+  :root{
+    --paper: #efe4c8;
+    --paper-2: #e6d8ae;
+    --paper-shadow: #d8c896;
+    --ink: #241a10;
+    --ink-soft: #4a3a26;
+    --brass: #9c7a2e;
+    --brass-bright: #c9a13f;
+    --rust: #8a3a29;
+    --line: rgba(36,26,16,0.32);
+    --line-soft: rgba(36,26,16,0.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'EB Garamond',serif;
+    font-size:18px;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{ font-family:'Playfair Display',serif; font-weight:700; color:var(--ink); }
+  .stamp-font{ font-family:'Special Elite',monospace; letter-spacing:0.08em; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--brass); color:var(--paper); }
+
+  /* paper grain + fiber texture, everywhere */
+  body::before{
+    content:''; position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.5; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.15  0 0 0 0 0.11  0 0 0 0 0.06  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* vignette on whole page */
+  body::after{
+    content:''; position:fixed; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 40%, rgba(36,26,16,0.22) 100%);
+  }
+  .wrap{ position:relative; z-index:2; }
+
+  /* ---------- ornament helpers ---------- */
+  .flourish{ display:block; width:120px; height:26px; margin:26px auto; opacity:0.75; }
+  .rule-double{ height:6px; border-top:1px solid var(--line); border-bottom:3px solid var(--line); margin:0 auto; }
+  .corner-frame{ position:relative; }
+  .corner-frame::before, .corner-frame::after{
+    content:''; position:absolute; width:26px; height:26px; border:2px solid var(--brass); opacity:0.7;
+  }
+  .corner-frame::before{ top:-10px; left:-10px; border-right:none; border-bottom:none; }
+  .corner-frame::after{ bottom:-10px; right:-10px; border-left:none; border-top:none; }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:center; gap:2px;
+    background:linear-gradient(var(--paper) 82%, transparent);
+    padding:20px 10px 30px;
+  }
+  nav a{
+    font-family:'Special Elite',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    padding:8px 16px; color:var(--ink-soft); border-bottom:1px solid transparent; transition:.3s;
+  }
+  nav a.active, nav a:hover{ color:var(--rust); border-bottom-color:var(--rust); }
+  @media(max-width:820px){
+    nav{ flex-wrap:wrap; padding:12px 6px 20px; }
+    nav a{ font-size:10.5px; padding:6px 9px; }
   }
 
-  [data-theme="dark"] {
-    /* ── DARK THEME VARIABLES ── */
-    --bg: #0b1329;
-    --surface: #111a36;
-    --surface2: #1e294b;
-    --border: #2e3d6b;
-    --accent: #60a5fa;
-    --accent2: #38bdf8;
-    --text: #f9fafb;
-    --muted: #cbd5e1;
-    --dim: #94a3b8;
-    --tag-bg: #1e294b;
-    --hero-overlay: rgba(11, 19, 41, 0.3);
+  section{ position:relative; padding:130px 8vw 100px; max-width:1180px; margin:0 auto; }
+  .eyebrow{
+    font-family:'Special Elite',monospace; font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--rust); display:block; text-align:center; margin-bottom:14px;
   }
+  h2.title{ font-size:clamp(30px,4vw,48px); text-align:center; margin-bottom:8px; font-style:italic; }
+  .subtitle{ color:var(--ink-soft); font-size:18px; max-width:600px; margin:0 auto 60px; line-height:1.85; text-align:center; }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
-    transition: background 0.25s, color 0.25s;
+  /* ---------- HERO: full photo backdrop ---------- */
+  #home{
+    min-height:100vh; padding:0; max-width:none; margin:0;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
   }
+  .hero-bg{
+    position:absolute; inset:0; z-index:0; overflow:hidden;
+  }
+  .hero-bg img{
+    width:100%; height:100%; object-fit:cover;
+    filter:grayscale(55%) sepia(65%) contrast(1.2) brightness(0.42) saturate(1.1);
+  }
+  .hero-bg::after{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse at 50% 40%, rgba(36,20,10,0.25), rgba(20,12,6,0.82) 78%),
+              linear-gradient(180deg, rgba(20,12,6,0.55), rgba(20,12,6,0.75));
+  }
+  .hero-content{
+    position:relative; z-index:2; text-align:center; color:#efe4c8; padding:0 6vw; max-width:880px;
+  }
+  .hero-kicker{
+    font-family:'Special Elite',monospace; font-size:13px; letter-spacing:.3em; text-transform:uppercase;
+    color:#c9a13f; margin-bottom:26px; display:block;
+  }
+  .hero-name{ font-size:clamp(42px,7vw,80px); font-style:italic; line-height:1.15; margin-bottom:10px; color:#f4ead0;
+    text-shadow:0 2px 30px rgba(0,0,0,0.6); }
+  .hero-role{ font-size:clamp(16px,1.8vw,20px); color:#d9cba0; max-width:560px; margin:20px auto 40px; line-height:1.9; }
+  .hero-rule{ width:90px; height:1px; background:#c9a13f; margin:0 auto 30px; opacity:0.8; }
+  .hero-tags{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:42px; }
+  .tag{
+    font-family:'Special Elite',monospace; font-size:11.5px; letter-spacing:.05em; padding:8px 15px;
+    border:1px solid rgba(201,161,63,0.5); color:#e6d8ae; background:rgba(20,12,6,0.35);
+  }
+  .cta-row{ display:flex; flex-wrap:wrap; gap:18px; justify-content:center; }
+  .btn{
+    display:inline-flex; align-items:center; gap:10px; padding:15px 30px;
+    font-family:'Playfair Display',serif; font-weight:700; font-style:italic; font-size:16px;
+    border:1px solid #c9a13f; transition:.35s;
+  }
+  .btn-primary{ background:#c9a13f; color:#241a10; }
+  .btn-primary:hover{ background:#efe4c8; }
+  .btn-ghost{ color:#e6d8ae; }
+  .btn-ghost:hover{ background:rgba(201,161,63,0.15); }
 
-  /* ── NAV ── */
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 0 24px;
-    height: 56px;
-    transition: background 0.25s, border-color 0.25s;
-  }
-  
-  [data-theme="dark"] nav {
-    background: rgba(17, 26, 54, 0.85);
-  }
+  /* seal / signature stamp */
+  .seal{ width:120px; height:120px; margin:0 auto 34px; opacity:0.92; }
 
-  nav .nav-name {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--text);
-    margin-right: auto;
-    letter-spacing: -0.02em;
+  /* ---------- Education (parchment, plain) ---------- */
+  .timeline{ max-width:720px; margin:0 auto; }
+  .t-item{ position:relative; padding:30px 0 30px 50px; border-left:2px solid var(--line); }
+  .t-item:last-child{ border-left:2px solid transparent; }
+  .t-item::before{
+    content:''; position:absolute; left:-9px; top:34px; width:16px; height:16px; border-radius:50%;
+    background:var(--paper); border:2px solid var(--rust);
   }
+  .t-year{ font-family:'Special Elite',monospace; color:var(--rust); font-size:13px; letter-spacing:.08em; margin-bottom:6px; display:block; }
+  .t-title{ font-size:24px; font-style:italic; margin-bottom:6px; }
+  .t-org{ color:var(--brass); font-size:16px; margin-bottom:10px; display:block; font-family:'Special Elite',monospace; letter-spacing:.02em; }
+  .t-desc{ color:var(--ink-soft); line-height:1.9; }
 
-  nav a {
-    text-decoration: none;
-    color: var(--muted);
-    font-size: 13.5px;
-    font-weight: 500;
-    padding: 6px 13px;
-    border-radius: 6px;
-    transition: background 0.15s, color 0.15s;
-    letter-spacing: 0.01em;
+  /* ---------- Research: photo band section ---------- */
+  #research{ max-width:none; padding:0; }
+  .photo-band{
+    position:relative; padding:130px 8vw 100px; overflow:hidden;
   }
+  .photo-band .band-bg{ position:absolute; inset:0; z-index:0; }
+  .photo-band .band-bg img{
+    width:100%; height:100%; object-fit:cover;
+    filter:grayscale(50%) sepia(55%) contrast(1.15) brightness(0.4);
+  }
+  .photo-band .band-bg::after{
+    content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,12,6,0.86), rgba(20,12,6,0.72) 40%, rgba(20,12,6,0.9));
+  }
+  .photo-band .inner{ position:relative; z-index:2; max-width:1180px; margin:0 auto; }
+  .photo-band .eyebrow{ color:#c9a13f; }
+  .photo-band h2.title{ color:#f4ead0; }
+  .photo-band .subtitle{ color:#cbb989; }
 
-  nav a:hover, nav a.active {
-    background: var(--surface2);
-    color: var(--text);
+  .research-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(201,161,63,0.35); }
+  @media(max-width:900px){ .research-grid{ grid-template-columns:1fr; } }
+  .r-card{
+    background:rgba(20,14,8,0.72); padding:34px 28px; color:#e6d8ae;
   }
+  .r-card .num{ font-family:'Special Elite',monospace; color:#c9a13f; font-size:12px; letter-spacing:.15em; margin-bottom:14px; display:block;}
+  .r-card h3{ font-size:21px; color:#f4ead0; font-style:italic; margin-bottom:12px; }
+  .r-card p{ color:#cbb989; line-height:1.85; font-size:15.5px; }
 
-  /* Theme Toggle Button */
-  .theme-toggle {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 6px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    margin-left: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.15s;
+  /* ---------- Publications ---------- */
+  .pub-list{ max-width:820px; margin:0 auto; }
+  .pub{ padding:32px 0; border-bottom:1px solid var(--line); }
+  .pub:first-child{ border-top:1px solid var(--line); }
+  .pub-year{ font-family:'Special Elite',monospace; color:var(--rust); font-size:14px; letter-spacing:.05em; display:block; margin-bottom:8px;}
+  .pub-title{ font-size:22px; font-style:italic; margin-bottom:10px; line-height:1.55; }
+  .pub-meta{ color:var(--ink-soft); font-size:15px; margin-bottom:12px; font-family:'Special Elite',monospace; letter-spacing:0.01em;}
+  .pub-note{ color:var(--ink-soft); font-size:16px; line-height:1.85; margin-bottom:14px; max-width:640px; }
+  .pub-link{
+    font-family:'Special Elite',monospace; font-size:12.5px; letter-spacing:.08em; color:var(--rust);
+    border-bottom:1px solid var(--rust); padding-bottom:2px;
   }
-  .theme-toggle:hover {
-    border-color: var(--text);
-  }
+  .pub-link:hover{ color:var(--ink); border-color:var(--ink); }
 
-  /* ── LAYOUT ── */
-  .page-shell {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 48px 24px 120px;
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 48px;
-    align-items: start;
-  }
+  /* ---------- Projects ---------- */
+  .ds-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:34px; max-width:1000px; margin:0 auto; }
+  @media(max-width:820px){ .ds-grid{ grid-template-columns:1fr; } }
+  .ds-card{ padding:36px 30px; position:relative; }
+  .ds-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:14px;}
+  .ds-badge{ font-family:'Special Elite',monospace; font-size:11px; letter-spacing:.06em; padding:5px 12px; border:1px solid var(--brass); color:var(--brass); white-space:nowrap;}
+  .ds-card h3{ font-size:22px; font-style:italic; margin-bottom:14px; }
+  .ds-card p{ color:var(--ink-soft); line-height:1.85; font-size:16px; }
+  .ds-stack{ display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; padding-top:16px; border-top:1px solid var(--line-soft);}
+  .ds-stack span{ font-family:'Special Elite',monospace; font-size:11px; color:var(--ink-soft); padding:5px 10px; border:1px solid var(--line); }
 
-  /* ── SIDEBAR ── */
-  .sidebar {
-    position: sticky;
-    top: 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  /* ---------- CV: photo band again ---------- */
+  #cv{ max-width:none; padding:0; }
+  .cv-shell{ display:grid; grid-template-columns:1fr 1fr; gap:70px; max-width:1050px; margin:0 auto; }
+  @media(max-width:900px){ .cv-shell{ grid-template-columns:1fr; } }
+  .cv-block h3{
+    font-family:'Special Elite',monospace; font-size:14px; letter-spacing:.1em; text-transform:uppercase;
+    color:#c9a13f; margin-bottom:20px; border-bottom:1px solid rgba(201,161,63,0.4); padding-bottom:10px;
   }
+  .cv-row{ display:flex; justify-content:space-between; gap:16px; padding:14px 0; border-bottom:1px dotted rgba(230,216,174,0.3); color:#e6d8ae;}
+  .cv-row .role{ font-size:16px; line-height:1.5; font-style:italic; }
+  .cv-row .yr{ color:#a89568; font-family:'Special Elite',monospace; font-size:12px; white-space:nowrap; padding-top:2px;}
+  .skill-group{ margin-bottom:24px; }
+  .skill-group-title{ font-size:12.5px; color:#a89568; font-family:'Special Elite',monospace; margin-bottom:10px; letter-spacing:.05em;}
+  .skill-tags{ display:flex; flex-wrap:wrap; gap:8px; }
+  .skill-tags span{ font-size:13.5px; padding:7px 14px; color:#efe4c8; border:1px solid rgba(230,216,174,0.35); }
+  .cv-download{ margin-top:36px; }
 
-  .profile-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px 22px 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    transition: background 0.25s, border-color 0.25s;
+  /* ---------- footer ---------- */
+  footer{
+    text-align:center; padding:80px 8vw 60px; background:var(--paper-2); border-top:1px solid var(--line);
   }
+  .foot-seal{ width:90px; height:90px; margin:0 auto 26px; opacity:0.85; }
+  .foot-links{ display:flex; justify-content:center; gap:22px; margin-bottom:26px; flex-wrap:wrap; }
+  .foot-links a{ width:42px; height:42px; border:1px solid var(--line); border-radius:50%; display:flex; align-items:center; justify-content:center; transition:.3s; }
+  .foot-links a:hover{ border-color:var(--rust); color:var(--rust); }
+  .foot-links svg{ width:17px; height:17px; }
+  footer small{ font-family:'Special Elite',monospace; font-size:11.5px; letter-spacing:.08em; color:var(--ink-soft); }
 
-  .avatar-ring {
-    width: 100px;
-    height: 100px;
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    padding: 3px;
-    margin-bottom: 6px;
     overflow: hidden;
-  }
+    margin: 0 auto 20px auto;
+    border: 3px solid #c9a13f;
+}
 
-  .avatar-img {
+.profile-avatar img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
     object-fit: cover;
-    display: block;
-    background: var(--surface2);
-  }
-
-  .profile-name {
-    font-family: 'Fraunces', serif;
-    font-size: 19px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.03em;
-    line-height: 1.25;
-  }
-
-  .profile-role {
-    font-size: 13px;
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  .profile-affil {
-    font-size: 12.5px;
-    color: var(--muted);
-  }
-
-  .sidebar-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
-    transition: background 0.25s, border-color 0.25s;
-  }
-
-  .sidebar-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--dim);
-    margin-bottom: 12px;
-  }
-
-  .contact-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 7px;
-  }
-
-  .contact-row a {
-    color: var(--text);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-  }
-
-  .contact-row a:hover { color: var(--accent); text-decoration: underline; }
-
-  .icon-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-  }
-
-  .socials {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-  }
-
-  .social-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 12px;
-    color: var(--muted);
-    text-decoration: none;
-    transition: all 0.15s;
-    background: var(--tag-bg);
-    font-weight: 600;
-  }
-  .social-btn:hover { border-color: var(--text); color: var(--text); background: var(--surface); }
-
-  .quick-links {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .quick-links a {
-    font-size: 13.5px;
-    color: var(--muted);
-    text-decoration: none;
-    padding: 5px 8px;
-    border-radius: 6px;
-    transition: background 0.12s, color 0.12s;
-  }
-  .quick-links a:hover { background: var(--surface2); color: var(--text); }
-  .quick-links a.ql-active { color: var(--accent); font-weight: 600; }
-
-  /* ── MAIN CONTENT ── */
-  .main { display: flex; flex-direction: column; gap: 56px; }
-
-  /* Pure Robotics Hardware Banner (No people/humans) */
-  .hero-banner {
-    width: 100%;
-    height: 250px;
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-    background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), url('https://images.unsplash.com/photo-1589254065878-42c9da997008?auto=format&fit=crop&w=1200&q=80');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: flex-end;
-    padding: 24px;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    transition: border-color 0.25s;
-  }
-
-  .hero-tag {
-    position: relative;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11.5px;
-    color: var(--text);
-    letter-spacing: 0.02em;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 6px 14px;
-    border-radius: 6px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    font-weight: 600;
-    z-index: 2;
-    transition: background 0.25s, border-color 0.25s;
-  }
-
-  /* Section header */
-  .section-head {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .section-head h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    color: var(--text);
-  }
-
-  .head-line {
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-    transition: background 0.25s;
-  }
-
-  /* Intro */
-  .intro-text {
-    font-size: 15.5px;
-    color: var(--muted);
-    line-height: 1.8;
-  }
-
-  .intro-text a {
-    color: var(--text);
-    text-decoration: none;
-    border-bottom: 2px solid var(--accent);
-    transition: all 0.15s;
-    font-weight: 600;
-  }
-  .intro-text a:hover { background: var(--surface2); }
-
-  .intro-text strong { color: var(--text); font-weight: 600; }
-
-  /* Research interest tags */
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 18px;
-  }
-
-  .tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    padding: 5px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    background: var(--surface);
-    letter-spacing: 0.02em;
-    font-weight: 500;
-    transition: all 0.25s;
-  }
-
-  .tag.primary {
-    border-color: var(--text);
-    color: var(--text);
-    background: var(--surface2);
-    font-weight: 600;
-  }
-
-  /* CTA link buttons */
-  .link-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 20px;
-  }
-
-  .link-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.15s;
-  }
-
-  .link-btn.outline {
-    border: 1px solid var(--border);
-    color: var(--text);
-    background: var(--surface);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  }
-  .link-btn.outline:hover { border-color: var(--text); background: var(--tag-bg); }
-
-  .link-btn.solid {
-    background: var(--text);
-    color: var(--surface);
-    border: 1px solid var(--text);
-  }
-  .link-btn.solid:hover { opacity: 0.9; }
-
-  /* Publications */
-  .pub-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 22px;
-    margin-bottom: 12px;
-    transition: all 0.15s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.01);
-  }
-  .pub-card:hover { border-color: var(--text); box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-
-  .pub-meta {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--dim);
-    margin-bottom: 6px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
-  .pub-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 5px;
-    line-height: 1.45;
-  }
-
-  .pub-authors {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-  .pub-authors strong { color: var(--accent); }
-
-  .pub-venue {
-    display: inline-block;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    padding: 3px 9px;
-    border-radius: 4px;
-    background: var(--tag-bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    letter-spacing: 0.04em;
-    font-weight: 600;
-  }
-
-  /* Research Areas */
-  .research-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-
-  .research-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 18px;
-    transition: all 0.15s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.01);
-  }
-  .research-card:hover { border-color: var(--text); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.04); }
-
-  .research-icon {
-    font-size: 22px;
-    margin-bottom: 10px;
-  }
-
-  .research-card h3 {
-    font-size: 14.5px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 6px;
-  }
-
-  .research-card p {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-
-  /* Work / experience */
-  .timeline { display: flex; flex-direction: column; gap: 0; }
-
-  .timeline-item {
-    display: grid;
-    grid-template-columns: 130px 1fr;
-    gap: 20px;
-    padding: 20px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .timeline-item:last-child { border-bottom: none; }
-
-  .tl-date {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11.5px;
-    color: var(--dim);
-    padding-top: 4px;
-    letter-spacing: 0.04em;
-    font-weight: 600;
-  }
-
-  .tl-body h3 {
-    font-size: 14.5px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 2px;
-  }
-
-  .tl-body .tl-org {
-    font-size: 13px;
-    color: var(--accent);
-    margin-bottom: 6px;
-    font-weight: 600;
-  }
-
-  .tl-body p {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.65;
-  }
-
-  /* Interests */
-  .interests-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .interest-pill {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--text);
-    transition: all 0.15s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
-    font-weight: 600;
-  }
-  .interest-pill:hover { border-color: var(--text); background: var(--tag-bg); }
-  .interest-pill .pill-icon { font-size: 20px; display: block; margin-bottom: 7px; }
-
-  /* News */
-  .news-item {
-    display: flex;
-    gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-    align-items: flex-start;
-  }
-  .news-item:last-child { border-bottom: none; }
-
-  .news-date {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--dim);
-    white-space: nowrap;
-    padding-top: 3px;
-    min-width: 70px;
-    letter-spacing: 0.04em;
-    font-weight: 600;
-  }
-
-  .news-text {
-    font-size: 13.5px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .news-text a { color: var(--text); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--border); }
-  .news-text a:hover { color: var(--accent); border-color: var(--accent); }
-  .news-text strong { color: var(--text); }
-
-  /* Blog */
-  .blog-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 22px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    transition: all 0.15s;
-    text-decoration: none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.01);
-  }
-  .blog-card:hover { border-color: var(--text); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-
-  .blog-card-left h3 {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 5px;
-    line-height: 1.4;
-  }
-
-  .blog-card-left p {
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  .blog-date {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--dim);
-    white-space: nowrap;
-    font-weight: 600;
-  }
-
-  /* Footer */
-  footer {
-    text-align: center;
-    padding: 32px 0 16px;
-    font-size: 12.5px;
-    color: var(--dim);
-    border-top: 1px solid var(--border);
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: 0.04em;
-    font-weight: 600;
-    transition: border-color 0.25s;
-  }
-
-  /* Responsive styling */
-  @media (max-width: 760px) {
-    .page-shell {
-      grid-template-columns: 1fr;
-      padding: 24px 16px 80px;
-    }
-    .sidebar { position: static; }
-    .research-grid { grid-template-columns: 1fr; }
-    .interests-grid { grid-template-columns: repeat(2, 1fr); }
-    .timeline-item { grid-template-columns: 1fr; gap: 4px; }
-    nav .nav-name { display: none; }
-  }
+}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<nav>
-  <span class="nav-name">Aung Ko Ko Oo</span>
-  <a href="#intro" class="active">Intro</a>
-  <a href="#publications">Publications</a>
-  <a href="#research">Research</a>
-  <a href="#work">Work</a>
-  <a href="#interests">Interests</a>
-  <a href="#blog">Blog</a>
-  
-  <button class="theme-toggle" id="themeBtn">
-    <span id="themeIcon">🌙</span> <span id="themeText">Dark Mode</span>
-  </button>
+<nav id="siteNav">
+  <a href="#home" class="nav-link active">Home</a>
+  <a href="#education" class="nav-link">Education</a>
+  <a href="#research" class="nav-link">Research</a>
+  <a href="#publication" class="nav-link">Publications</a>
+  <a href="#dataset" class="nav-link">Projects</a>
+  <a href="#cv" class="nav-link">CV</a>
 </nav>
 
-<div class="page-shell">
-
-  <aside class="sidebar">
-
-    <div class="profile-card">
-      <div class="avatar-ring">
-        <img src="profile.jpg" alt="Aung Ko Ko Oo" class="avatar-img">
-      </div>
-      <div class="profile-name">Aung Ko Ko Oo</div>
-      <div class="profile-role">AI Researcher · CS Student</div>
-      <div class="profile-affil">University of the People, USA</div>
-      <div class="profile-affil">Founder, Burmese Artificial Intelligence Research Institute (BAIRI)</div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Email</div>
-      <div class="contact-row">
-        <div class="icon-dot"></div>
-        <a href="mailto:AungKoKoOo@uopeople.edu">AungKoKoOo@uopeople.edu</a>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Social</div>
-      <div class="socials">
-        <a href="https://github.com/sage2029" class="social-btn">GitHub</a>
-        <a href="https://scholar.google.com/citations?user=2uIqHIMAAAAJ&hl=en&authuser=1" class="social-btn">Google Scholar</a>
-        <a href="https://www.linkedin.com/in/austin2029/" class="social-btn">LinkedIn</a>
-        <a href="https://x.com/sage60458" class="social-btn">X</a>
-        <a href="index.html" target="_blank" class="social-btn">Lab</a>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Quick Links</div>
-      <div class="quick-links">
-        <a href="#intro" class="ql-active">Intro</a>
-        <a href="#publications">Publications</a>
-        <a href="#research">Research Areas</a>
-        <a href="#work">Work Experience</a>
-        <a href="#interests">Interests</a>
-        <a href="#blog">Blog</a>
-      </div>
-    </div>
-
-  </aside>
-
-  <main class="main">
-
-    <div class="hero-banner">
-      <span class="hero-tag">// Robot Learning · NLP · Computer Vision · HRI</span>
-    </div>
-
-    <section id="intro">
-      <div class="section-head">
-        <h2>Intro</h2>
-        <div class="head-line"></div>
-      </div>
-      <p class="intro-text">
-        I'm a Computer Science student at <a href="https://uopeople.edu" target="_blank">University of the People</a>, USA, with a deep focus on Artificial Intelligence and its real-world applications. I am the Founder and Director of the <a href="https://connect-lab.io" target="_blank"><strong>Burmese Artificial Intelligence Research Institute (BAIRI)</strong></a> — a research collective working to advance AI research and education in Myanmar (Burma).
-      </p>
-      <br>
-      <p class="intro-text">
-        My research interests span <strong>Artificial Intelligence & Machine Learning</strong>, <strong>Computer Vision</strong>, <strong>Natural Language Processing</strong>, and <strong>Robotics & Human-Robot Interaction</strong>. I am passionate about building AI systems that are accessible, impactful, and grounded in rigorous research — particularly in under-resourced linguistic and geographic contexts.
-      </p>
-
-      <div class="tags">
-        <span class="tag primary">AI / Machine Learning</span>
-        <span class="tag primary">Computer Vision</span>
-        <span class="tag primary">NLP</span>
-        <span class="tag primary">Robotics / HRI</span>
-        <span class="tag">Deep Learning</span>
-        <span class="tag">Burmese NLP</span>
-        <span class="tag">Low-Resource AI</span>
-      </div>
-
-      <div class="link-buttons">
-        <a href="mailto:AungKoKoOo@uopeople.edu" class="link-btn outline">✉ Email</a>
-        <a href="CV_L_tex.pdf" class="link-btn outline">📄 CV</a>
-        <a href="https://scholar.google.com/citations?user=2uIqHIMAAAAJ&hl=en&authuser=1" class="link-btn outline">Google Scholar</a>
-        <a href="index.html" target="_blank" class="link-btn solid">🔬 BAIRI Lab</a>
-        <a href="#blog" class="link-btn outline">✍ Blog</a>
-      </div>
-    </section>
-
-    <section id="news">
-      <div class="section-head">
-        <h2>News</h2>
-        <div class="head-line"></div>
-      </div>
-      <div>
-        <div class="news-item">
-          <span class="news-date">2026</span>
-          <span class="news-text"><strong>Founded</strong> the Burmese Artificial Intelligence Research Institute (<a href="index2.html">BAIRI</a>), a research lab focused on advancing AI in Myanmar.</span>
-        </div>
-        <div class="news-item">
-          <span class="news-date">2025</span>
-          <span class="news-text">Enrolled at <a href="https://www.uopeople.edu/" target="_blank"><strong>University of the People</strong></a>, pursuing a B.Sc. in Computer Science.</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="publications">
-      <div class="section-head">
-        <h2>Publications</h2>
-        <div class="head-line"></div>
-      </div>
-
-      <div class="pub-card">
-        <div class="pub-meta">2026 · Preprint, ResearchSquare</div>
-        <div class="pub-title">Integrating Natural Language Processing with Deep Knowledge Tracing in Intelligent Tutoring Systems for Low-Resource Languages: A Case Study on Burmese STEM Curricula</div>
-        <div class="pub-authors"><strong>Aung Ko Ko Oo</strong></div>
-        <span class="pub-venue">BAIRI Research Paper </span>
-        <div class="pub-links">
-          <a href="https://www.researchsquare.com/article/rs-9991485/v1.pdf?c=1781160343000" class="pub-link">PDF</a>
-          <a href="https://doi.org/10.21203/rs.3.rs-9991485/v1" class="pub-link">DOI</a>
-          <a href="https://github.com/sage2029/BAIRI-omni-research" class="pub-link">Code</a>
-        </div>
-      </div>
-
-    
-
-      <div class="pub-card">
-        <div class="pub-meta">2026. Preprint , ResearchSquare</div>
-        <div class="pub-title">Mitigating Hallucinations in Large Language Models forBurmese Domain-Specific Question Answering</div>
-        <div class="pub-authors"><strong>Aung Ko Ko Oo</strong></div>
-        <span class="pub-venue">BAIRI Research Paper</span>
-              <div class="pub-links"><a href="https://www.researchsquare.com/article/rs-10023313/v1">PDF</a>
-        <a href="https://doi.org/10.21203/rs.3.rs-10023313/v1">DOI</a>
-        <a href="">Code</a></div>
-        
-  
-
-
-    </section>
-
-    <section id="research">
-      <div class="section-head">
-        <h2>Research Areas</h2>
-        <div class="head-line"></div>
-      </div>
-      <div class="research-grid">
-        <div class="research-card">
-          <div class="research-icon">🧠</div>
-          <h3>AI / Machine Learning</h3>
-          <p>Deep learning architectures, reinforcement learning, transfer learning, and developing AI systems for low-resource settings.</p>
-        </div>
-        <div class="research-card">
-          <div class="research-icon">👁</div>
-          <h3>Computer Vision</h3>
-          <p>Object detection, scene understanding, image segmentation, and vision-language models for multi-modal perception.</p>
-        </div>
-        <div class="research-card">
-          <div class="research-icon">🗣</div>
-          <h3>Natural Language Processing</h3>
-          <p>Burmese language modeling, low-resource NLP, machine translation, and cross-lingual understanding.</p>
-        </div>
-        <div class="research-card">
-          <div class="research-icon">🤖</div>
-          <h3>Robotics / Human-Robot Interaction</h3>
-          <p>Assistive robotics, socially-aware robot systems, dexterous manipulation, and HRI design for diverse communities.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="work">
-      <div class="section-head">
-        <h2>Work Experience</h2>
-        <div class="head-line"></div>
-      </div>
-      <div class="timeline">
-
-        <div class="timeline-item">
-          <div class="tl-date">2026 – Present</div>
-          <div class="tl-body">
-            <h3>Founder & Research Director</h3>
-            <div class="tl-org"><a href="index2.html" style="color:inherit;text-decoration:none;border-bottom:1px dashed var(--accent);">Burmese Artificial Intelligence Research Institute (BAIRI)</a></div>
-            <p>Founded and lead an AI research institute advancing machine learning, NLP, and computer vision research in Myanmar. Building open-source tools, datasets, and educational resources for the Burmese-speaking AI community.</p>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="tl-date">2025 – Present</div>
-          <div class="tl-body">
-            <h3>Computer Science Student</h3>
-            <div class="tl-org">University of the People, USA</div>
-            <p>Pursuing a B.Sc. in Computer Science. Core coursework in algorithms, data structures, software engineering, and artificial intelligence. Conducting independent AI research alongside studies.</p>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="tl-date">2025</div>
-          <div class="tl-body">
-            <h3>Independent AI Researcher</h3>
-            <div class="tl-org">Self-Directed Research</div>
-            <p>Conducting research on Burmese NLP, low-resource language modeling, and human-robot interaction. Collaborating with international researchers and open-source communities.</p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <section id="interests">
-      <div class="section-head">
-        <h2>Interests</h2>
-        <div class="head-line"></div>
-      </div>
-      <div class="interests-grid">
-        <div class="interest-pill">
-          <span class="pill-icon">🧬</span>
-          Deep Learning Theory
-        </div>
-        <div class="interest-pill">
-          <span class="pill-icon">🌏</span>
-          Low-Resource AI
-        </div>
-        <div class="interest-pill">
-          <span class="pill-icon">🤝</span>
-          Human-Robot Interaction
-        </div>
-        <div class="interest-pill">
-          <span class="pill-icon">📝</span>
-          Burmese NLP
-        </div>
-        <div class="interest-pill">
-          <span class="pill-icon">🎓</span>
-          AI Education
-        </div>
-        <div class="interest-pill">
-          <span class="pill-icon">🔭</span>
-          Open-Source Science
-        </div>
-        <div class="interest-pill">
-          <span class="pill-icon">📷</span>
-          Computer Vision
-        </div>
-        <div class="interest-pill">
-          <span class="pill-icon">🗺</span>
-          Tech for SEA
-        </div>
-        <div class="interest-pill">
-          <span class="pill-icon">🤖</span>
-          Assistive Robotics
-        </div>
-      </div>
-    </section>
-
-    <section id="blog">
-      <div class="section-head">
-        <h2>Blog</h2>
-        <div class="head-line"></div>
-      </div>
-
-      <a href="#" class="blog-card">
-        <div class="blog-card-left">
-          <h3>Why Burmese NLP Matters: A Case for Low-Resource Language Research</h3>
-          <p>An argument for investing in under-resourced Southeast Asian languages and what progress looks like.</p>
-        </div>
-        <div class="blog-date">2025/05</div>
-      </a>
-
-      <a href="#" class="blog-card">
-        <div class="blog-card-left">
-          <h3>Getting Started with Transformer Models on Limited Hardware</h3>
-          <p>Practical techniques for training and fine-tuning LLMs when you don't have a GPU cluster.</p>
-        </div>
-        <div class="blog-date">2025/03</div>
-      </a>
-
-      <a href="#" class="blog-card">
-        <div class="blog-card-left">
-          <h3>Human-Robot Interaction: Designing Robots People Actually Trust</h3>
-          <p>Reflections on what makes HRI systems feel natural, and the cultural dimensions often overlooked in robotics research.</p>
-        </div>
-        <div class="blog-date">2025/01</div>
-      </a>
-
-      <a href="#" class="blog-card">
-        <div class="blog-card-left">
-          <h3>Building BAIRI: Starting an AI Research Institute from Scratch</h3>
-          <p>The story of founding a research institute in Myanmar, the challenges, and the mission that drives it forward.</p>
-        </div>
-        <div class="blog-date">2024/12</div>
-      </a>
-
-    </section>
-
-  </main>
+<!-- ============ HOME — full photo backdrop ============ -->
+<section id="home">
+  <div class="hero-bg">
+    <img src="https://cdn.pixabay.com/photo/2023/02/05/01/10/robot-7768527_1280.jpg" alt="BG photo">
+  </div>
+  <div class="hero-content">
+    <div class="profile-avatar">
+    <img src="profile2.jpg" alt="Aung Ko Ko Oo Profile Photo">
 </div>
+    <span class="hero-kicker">Computer Scientist &amp; Artificial Intelligence Researcher</span>
+    <h1 class="hero-name">Aung Ko Ko Oo</h1>
+    <div class="hero-rule"></div>
+    <p class="hero-role">
+      Building natural language processing and intelligent tutoring systems for
+      low-resource languages — with the same care an artisan brings to a well-made instrument.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">NLP — Low-Resource Languages</span>
+      <span class="tag">Machine learning & Artificial Intelligence</span>
+      <span class="tag">Computer Vision</span>
+      <span class="tag">Quantum Computing</span>
+      <span class="tag">Robotics &amp; HRI</span>
+    </div>
+    <div class="cta-row">
+      <a href="#publication" class="btn btn-primary">View Publications</a>
+      <a href="#cv" class="btn btn-ghost">Download CV</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EDUCATION ============ -->
+<section id="education">
+  <span class="eyebrow">Chapter I</span>
+  <h2 class="title">Education</h2>
+  <svg class="flourish" viewBox="0 0 120 26"><path d="M0 13h40M80 13h40M40 13c5-9 15-9 20 0-5 9-15 9-20 0Z" stroke="#9c7a2e" stroke-width="1" fill="none"/><circle cx="50" cy="13" r="2" fill="#9c7a2e"/><circle cx="70" cy="13" r="2" fill="#9c7a2e"/></svg>
+  <p class="subtitle">Formal coursework paired with self-directed research in artificial intelligence.</p>
+
+  <div class="timeline">
+    <div class="t-item">
+      <span class="t-year">Jan 2026 — Present</span>
+      <h3 class="t-title">MicroMasters® Program in Statistics and Data Science</h3>
+      <span class="t-org">Massachusetts Institute of Technology (MIT) — Cambridge, MA, USA (Online)</span>
+      <p class="t-desc">Graduate-level coursework in probability, statistics, and data analysis, forming the
+        theoretical foundation behind the machine learning systems developed in current research work.</p>
+    </div>
+    <div class="t-item">
+      <span class="t-year">Expected May 2027</span>
+      <h3 class="t-title">Bachelor of Science in Computer Science</h3>
+      <span class="t-org">University of the People — Pasadena, CA, USA · GPA 3.8 / 4.0</span>
+      <p class="t-desc">Core computer science curriculum spanning algorithms, software engineering, and
+        applied mathematics, pursued alongside active research and open-source work.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESEARCH — photo band ============ -->
+<section id="research">
+  <div class="photo-band">
+    <div class="band-bg"><img src="https://cdn.pixabay.com/photo/2017/05/10/19/29/robot-2301646_1280.jpg" alt=""></div>
+    <div class="inner">
+      <span class="eyebrow">Chapter II</span>
+      <h2 class="title">Research</h2>
+      <p class="subtitle">Founder &amp; Lead Researcher at the Burmese Artificial Intelligence Research Institute (Mar 2026 – Present), building open tools and benchmarks for low-resource language AI.</p>
+
+      <div class="research-grid corner-frame">
+        <div class="r-card">
+          <span class="num">I.</span>
+          <h3>NLP for Low-Resource Languages</h3>
+          <p>Data parsing tools, tokenization frameworks, and transformer fine-tuning benchmarks built for low-resource character architectures such as Burmese.</p>
+        </div>
+        <div class="r-card">
+          <span class="num">II.</span>
+          <h3>Machine learning</h3>
+          <p>Developing robust machine learning architectures, statistical models, and custom optimization algorithms designed for complex data patterns and low-resource environments.</p>
+        </div>
+        <div class="r-card">
+          <span class="num">III.</span>
+          <h3>Quantum Computing</h3>
+          <p> Exploring quantum algorithms, quantum machine learning frameworks, and theoretical architectures to address computational bottlenecks in complex optimization problems.</p>
+        </div>
+        <div class="r-card">
+          <span class="num">IV.</span>
+          <h3>Computer Vision</h3>
+          <p>NumPy-optimized vision pipelines handling irregular character layouts and linguistic segmentation for scripts standard tooling wasn't built for.</p>
+        </div>
+        <div class="r-card">
+          <span class="num">V.</span>
+          <h3>Robotics &amp; Human-Robot Interaction</h3>
+          <p>A longer-term interest in bringing low-resource-language understanding into embodied, interactive systems people can speak with naturally.</p>
+        </div>
+        <div class="r-card">
+          <span class="num">VI.</span>
+          <h3>Artificial Intelligence</h3>
+          <p>Designing scalable artificial intelligence systems, foundation model pipelines, and integrative frameworks to address specialized downstream tasks and real-world application domains.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PUBLICATIONS ============ -->
+<section id="publication">
+  <span class="eyebrow">Chapter III</span>
+  <h2 class="title">Publications</h2>
+  <svg class="flourish" viewBox="0 0 120 26"><path d="M0 13h40M80 13h40M40 13c5-9 15-9 20 0-5 9-15 9-20 0Z" stroke="#9c7a2e" stroke-width="1" fill="none"/><circle cx="50" cy="13" r="2" fill="#9c7a2e"/><circle cx="70" cy="13" r="2" fill="#9c7a2e"/></svg>
+  <p class="subtitle">Recent research on applying deep learning and language models to low-resource, Burmese-language problems.</p>
+
+  <div class="pub-list">
+    <div class="pub">
+      <span class="pub-year">2026</span>
+      <div class="pub-title">Integrating Natural Language Processing with Deep Knowledge Tracing in Intelligent Tutoring Systems for Low-Resource Languages: A Case Study on Burmese STEM Curricula</div>
+      <div class="pub-meta">Preprint · DOI: 10.21203/rs.3.rs-9991485/v1</div>
+      <p class="pub-note">Developed an algorithmic pipeline pairing Deep Knowledge Tracing (DKT) frameworks with syntax analyzers to optimize adaptive technical learning structures for the Burmese language.</p>
+      <a href="https://doi.org/10.21203/rs.3.rs-9991485/v1" class="pub-link">View DOI →</a>
+    </div>
+    <div class="pub">
+      <span class="pub-year">2026</span>
+      <div class="pub-title">Mitigating Hallucinations in Large Language Models for Burmese Domain-Specific Question Answering</div>
+      <div class="pub-meta">Preprint · DOI: 10.21203/rs.3.rs-10023313/v1</div>
+      <p class="pub-note">Designed a domain-specific Retrieval-Augmented Generation (RAG) fine-tuning pipeline engineered to bound factual anomalies within generative models handling complex, low-resource string dynamics.</p>
+      <a href="https://doi.org/10.21203/rs.3.rs-10023313/v1" class="pub-link">View DOI →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS ============ -->
+<section id="dataset">
+  <span class="eyebrow">Chapter IV</span>
+  <h2 class="title">Projects</h2>
+  <svg class="flourish" viewBox="0 0 120 26"><path d="M0 13h40M80 13h40M40 13c5-9 15-9 20 0-5 9-15 9-20 0Z" stroke="#9c7a2e" stroke-width="1" fill="none"/><circle cx="50" cy="13" r="2" fill="#9c7a2e"/><circle cx="70" cy="13" r="2" fill="#9c7a2e"/></svg>
+  <p class="subtitle">Tools and pipelines built to support research in low-resource-language AI.</p>
+
+  <div class="ds-grid">
+    <div class="ds-card corner-frame">
+      <div class="ds-top">
+        <h3>Intelligent Tutoring System — NLP Engine</h3>
+        <span class="ds-badge">Lead Developer</span>
+      </div>
+      <p>Built and deployed deep learning text-processing pipelines to evaluate student domain-specific
+        inputs in low-resource environments, integrating custom tokenization with classification models
+        to map student response logs for real-time proficiency tracking. <span class="stamp-font" style="color:var(--rust); font-size:12px;">Apr 2026 – Present</span></p>
+      <div class="ds-stack"><span>Python</span><span>PyTorch</span><span>Scikit-learn</span></div>
+    </div>
+    <div class="ds-card corner-frame">
+      <div class="ds-top">
+        <h3>Low-Resource Language Vision &amp; Sequence Benchmarks</h3>
+        <span class="ds-badge">Independent Creator</span>
+      </div>
+      <p>Implemented NumPy-optimized computer vision pipelines and sequence-to-sequence architectures
+        to handle irregular character layouts and linguistic segmentation, along with standalone tools
+        for dataset ingestion and downstream evaluation.</p>
+      <div class="ds-stack"><span>Python</span><span>NumPy</span><span>OpenCV</span><span>Sequence Architecture</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CV — photo band ============ -->
+<section id="cv">
+  <div class="photo-band">
+    <div class="band-bg"><img src="https://cdn.pixabay.com/photo/2017/11/10/22/35/robot-2937861_1280.jpg" alt=""></div>
+    <div class="inner">
+      <span class="eyebrow">Chapter V</span>
+      <h2 class="title">Curriculum Vitae</h2>
+      <p class="subtitle">Research experience and technical skills at a glance.</p>
+
+      <div class="cv-shell">
+        <div class="cv-block">
+          <h3>Research Experience</h3>
+          <div class="cv-row"><span class="role">Founder &amp; Lead Researcher — Burmese AI Research Institute</span><span class="yr">Mar 2026–Present</span></div>
+          <div class="cv-row"><span class="role">Lead Developer — Intelligent Tutoring System NLP Engine</span><span class="yr">Apr 2026–Present</span></div>
+          <div class="cv-row"><span class="role">Independent Creator — Low-Resource Vision &amp; Sequence Benchmarks</span><span class="yr">2026</span></div>
+
+          <h3 style="margin-top:38px;">Education</h3>
+          <div class="cv-row"><span class="role">MIT MicroMasters, Statistics and Data Science</span><span class="yr">2026–Present</span></div>
+          <div class="cv-row"><span class="role">B.S. Computer Science, University of the People (GPA 3.8)</span><span class="yr">Exp. 2027</span></div>
+        </div>
+
+        <div class="cv-block">
+          <h3>Technical Skills</h3>
+          <div class="skill-group">
+            <div class="skill-group-title">Computing Languages</div>
+            <div class="skill-tags"><span>Python</span><span>SQL</span><span>Bash</span><span>HTML/CSS</span></div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Frameworks &amp; Systems</div>
+            <div class="skill-tags"><span>PyTorch</span><span>TensorFlow</span><span>NumPy</span><span>Pandas</span><span>Scikit-learn</span><span>OpenCV</span></div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Core Methodology</div>
+            <div class="skill-tags"><span>Retrieval-Augmented Generation (RAG)</span><span>Deep Knowledge Tracing (DKT)</span><span>Neural Language Modeling</span><span>Sequence Engineering</span></div>
+          </div>
+          <div class="cv-download">
+            <a href="CV.pdf" class="btn btn-primary">Download Full CV (PDF)</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <footer>
-  © 2026 Aung Ko Ko Oo · AungKoKoOo@uopeople.edu · BAIRI
+  <svg class="foot-seal" viewBox="0 0 120 120" fill="none">
+    <circle cx="60" cy="60" r="56" stroke="#8a3a29" stroke-width="1.2"/>
+    <circle cx="60" cy="60" r="47" stroke="#8a3a29" stroke-width="0.7" stroke-dasharray="2 4"/>
+    <text x="60" y="34" text-anchor="middle" fill="#8a3a29" font-family="Special Elite, monospace" font-size="7" letter-spacing="1.5">A · K · O</text>
+    <text x="60" y="94" text-anchor="middle" fill="#8a3a29" font-family="Special Elite, monospace" font-size="7" letter-spacing="1.5">MMXXVI</text>
+    <path d="M40 60c4-10 10-16 20-16s16 6 20 16c-4 10-10 16-20 16s-16-6-20-16Z" stroke="#8a3a29" stroke-width="1"/>
+    <circle cx="60" cy="60" r="5" fill="#8a3a29"/>
+  </svg>
+  <div class="foot-links">
+    <a href="mailto:AungKoKoOo@my.uopeople.edu" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
+    <a href="https://github.com/Aung-Ko-Ko-Oo" title="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 19c-4 1.5-4-1-6-2m12 4v-3.2c0-1 .3-1.5.9-2-2.9-.3-6-1.4-6-6.4 0-1.4.5-2.6 1.4-3.5-.1-.3-.6-1.7.1-3.5 0 0 1.1-.3 3.5 1.3a12 12 0 0 1 6.4 0c2.4-1.6 3.5-1.3 3.5-1.3.7 1.8.2 3.2.1 3.5.9.9 1.4 2.1 1.4 3.5 0 5-3.1 6.1-6 6.4.5.4 1 1.3 1 2.6V19"/></svg></a>
+    <a href="https://www.linkedin.com/in/austin2029/" title="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+    <a href="https://huggingface.co/austin2029" title="Hugging Face"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm-3 7a1.5 1.5 0 1 1-1.5 1.5A1.5 1.5 0 0 1 9 9zm6 0a1.5 1.5 0 1 1-1.5 1.5A1.5 1.5 0 0 1 15 9zm-6.5 6a5 5 0 0 0 7 0"></path></svg></a>
+    <a href="https://scholar.google.com/citations?hl=en&authuser=1&user=2uIqHIMAAAAJ" title="Google Scholar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L1 7l11 5 9-4.09V17h2V7L12 2z"></path><path d="M3.5 10.15V16c0 2.5 3.8 4.5 8.5 4.5s8.5-2 8.5-4.5v-5.85l-8.5 3.86-8.5-3.86z"></path></svg></a>
+  </div>
+  <small>KOBE, JAPAN — AUNG KO KO OO · 2026</small>
 </footer>
 
+</div>
+
 <script>
-  // Theme Switching Logic
-  const htmlEl = document.documentElement;
-  const themeBtn = document.getElementById('themeBtn');
-  const themeIcon = document.getElementById('themeIcon');
-  const themeText = document.getElementById('themeText');
-
-  themeBtn.addEventListener('click', () => {
-    const currentTheme = htmlEl.getAttribute('data-theme');
-    if (currentTheme === 'light') {
-      htmlEl.setAttribute('data-theme', 'dark');
-      themeIcon.textContent = '☀️';
-      themeText.textContent = 'Light Vibe';
-    } else {
-      htmlEl.setAttribute('data-theme', 'light');
-      themeIcon.textContent = '🌙';
-      themeText.textContent = 'Dark Mode';
-    }
-  });
-
-  // Navigation tracking
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('nav a');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        navLinks.forEach(a => a.classList.remove('active'));
-        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
-        if (active) active.classList.add('active');
+  const links = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('section');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const match = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+        if(match) match.classList.add('active');
       }
     });
-  }, { rootMargin: '-30% 0px -60% 0px' });
-
-  sections.forEach(s => observer.observe(s));
-
-  // Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  sections.forEach(s=>io.observe(s));
 </script>
 </body>
 </html>
